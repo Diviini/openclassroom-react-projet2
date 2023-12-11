@@ -1,0 +1,8 @@
+{
+    //Facultatif car initialisation dès le début
+    "extends": ["react-app"],
+    "rules": {
+        /*"no-console":"error"*/ //Permet d'afficher une erreur quand on fait un console.log
+    }
+    /*On peut install des plugin ou règles de codes ici avec extends*/
+}
