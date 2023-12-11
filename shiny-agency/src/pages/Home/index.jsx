@@ -1,5 +1,9 @@
-function App() {
-  return console.log();
+function Home() {
+  return (
+    <div>
+      <h1> Page d'accueil 🏠</h1>
+    </div>
+  )
 }
 
-export default App;
+export default Home
