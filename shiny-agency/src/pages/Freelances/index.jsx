@@ -1,6 +1,8 @@
 import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
+import { useState, useEffect } from 'react'
+import { Loader } from '../../utils/style/Atoms'
 
 const CardsContainer = styled.div`
   display: grid;
@@ -26,37 +28,49 @@ const PageSubtitle = styled.h2`
   padding-bottom: 30px;
 `
 
-const freelanceProfiles = [
-  {
-    name: 'Jane Doe',
-    jobTitle: 'Devops',
-  },
-  {
-    name: 'John Doe',
-    jobTitle: 'Developpeur frontend',
-  },
-  {
-    name: 'Jeanne Biche',
-    jobTitle: 'Développeuse Fullstack',
-  },
-]
-
 function Freelances() {
+  const [isDataLoading, setDataLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [freelancersList, setFreelanceList] = useState([])
+
+  useEffect(() => {
+    async function fetchFreelances() {
+      setDataLoading(true)
+      try {
+        const response = await fetch(`http://localhost:8000/freelances`)
+        const { freelancersList } = await response.json()
+        setFreelanceList(freelancersList)
+      } catch (err) {
+        console.log('===== error =====', err)
+        setError(true)
+      } finally {
+        setDataLoading(false)
+      }
+    }
+    fetchFreelances()
+  }, [])
+
   return (
     <div>
       <PageTitle>Trouvez votre prestataire</PageTitle>
       <PageSubtitle>
         Chez Shiny nous réunissons les meilleurs profils pour vous.
       </PageSubtitle>
-      <CardsContainer>
-        {freelanceProfiles.map((profile, index) => (
-          <Card
-            key={`${profile.name}-${index}`}
-            label={profile.jobTitle}
-            title={profile.name}
-          />
-        ))}
-      </CardsContainer>
+
+      {isDataLoading ? (
+        <Loader />
+      ) : (
+        <CardsContainer>
+          {freelancersList.map((profile, index) => (
+            <Card
+              key={`${profile.name}-${index}`}
+              label={profile.jobTitle}
+              title={profile.name}
+              picture={profile.picture}
+            />
+          ))}
+        </CardsContainer>
+      )}
     </div>
   )
 }
